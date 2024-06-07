@@ -42,7 +42,7 @@ const Index = () => {
 
   return (
     <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-      {confetti && <Confetti />}
+      {confetti && <Confetti width={window.innerWidth} height={window.innerHeight} />}
       <VStack spacing={4} width="100%">
         <HStack width="100%">
           <Input
