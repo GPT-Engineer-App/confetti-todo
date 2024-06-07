@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Container, VStack, HStack, Input, Button, Checkbox, Text } from "@chakra-ui/react";
 import Confetti from "react-confetti";
+import { useWindowSize } from 'react-use';
+import Balloons from 'react-balloons'; // hypothetical package for balloons animation
+import Fireworks from 'react-fireworks'; // hypothetical package for fireworks animation
 
 const Index = () => {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState("");
   const [confetti, setConfetti] = useState(false);
+  const { width, height } = useWindowSize();
 
   const addTodo = () => {
     if (newTodo.trim() !== "") {
@@ -26,7 +30,7 @@ const Index = () => {
     // Check if all todos are completed
     if (updatedTodos.every(todo => todo.completed)) {
       setConfetti(true);
-      const timer = setTimeout(() => setConfetti(false), 3000);
+      const timer = setTimeout(() => setConfetti(false), 10000); // 10 seconds
       return () => clearTimeout(timer);
     }
   };
@@ -35,14 +39,20 @@ const Index = () => {
     // Trigger confetti effect only when all todos are completed
     if (todos.length > 0 && todos.every(todo => todo.completed)) {
       setConfetti(true);
-      const timer = setTimeout(() => setConfetti(false), 3000);
+      const timer = setTimeout(() => setConfetti(false), 10000); // 10 seconds
       return () => clearTimeout(timer);
     }
   }, [todos]);
 
   return (
     <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-      {confetti && <Confetti width={window.innerWidth} height={window.innerHeight} />}
+      {confetti && (
+        <>
+          <Confetti width={width} height={height} numberOfPieces={1000} />
+          <Balloons width={width} height={height} />
+          <Fireworks width={width} height={height} />
+        </>
+      )}
       <VStack spacing={4} width="100%">
         <HStack width="100%">
           <Input
