@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from "react";
+import { useWindowSize } from 'react-use';
+import { useState, useEffect } from 'react';
+import Confetti from 'react-confetti';
 import { Container, VStack, HStack, Input, Button, Checkbox, Text } from "@chakra-ui/react";
-import Confetti from "react-confetti";
 
 const Index = () => {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState("");
   const [confetti, setConfetti] = useState(false);
+  const [confettiDuration, setConfettiDuration] = useState(10000); // 10 seconds
+  const [confettiRecycle, setConfettiRecycle] = useState(true);
+  const { width, height } = useWindowSize();
 
   const addTodo = () => {
     if (newTodo.trim() !== "") {
@@ -26,7 +30,12 @@ const Index = () => {
     // Check if all todos are completed
     if (updatedTodos.every(todo => todo.completed)) {
       setConfetti(true);
-      const timer = setTimeout(() => setConfetti(false), 3000);
+      setConfettiDuration(10000); // 10 seconds
+      setConfettiRecycle(true);
+      const timer = setTimeout(() => {
+        setConfetti(false);
+        setConfettiRecycle(false);
+      }, 10000);
       return () => clearTimeout(timer);
     }
   };
@@ -35,14 +44,27 @@ const Index = () => {
     // Trigger confetti effect only when all todos are completed
     if (todos.length > 0 && todos.every(todo => todo.completed)) {
       setConfetti(true);
-      const timer = setTimeout(() => setConfetti(false), 3000);
+      setConfettiDuration(10000); // 10 seconds
+      setConfettiRecycle(true);
+      const timer = setTimeout(() => {
+        setConfetti(false);
+        setConfettiRecycle(false);
+      }, 10000);
       return () => clearTimeout(timer);
     }
   }, [todos]);
 
   return (
     <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-      {confetti && <Confetti width={window.innerWidth} height={window.innerHeight} />}
+      {confetti && (
+        <Confetti
+          width={width}
+          height={height}
+          numberOfPieces={500}
+          recycle={confettiRecycle}
+          run={confetti}
+        />
+      )}
       <VStack spacing={4} width="100%">
         <HStack width="100%">
           <Input
