@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, VStack, HStack, Input, Button, Checkbox, Text } from "@chakra-ui/react";
 import Confetti from "react-confetti";
 
@@ -17,16 +17,20 @@ const Index = () => {
   const toggleTodo = (index) => {
     const updatedTodos = todos.map((todo, i) => {
       if (i === index) {
-        if (!todo.completed) {
-          setConfetti(true);
-          setTimeout(() => setConfetti(false), 3000);
-        }
         return { ...todo, completed: !todo.completed };
       }
       return todo;
     });
     setTodos(updatedTodos);
   };
+
+  useEffect(() => {
+    if (todos.some(todo => todo.completed)) {
+      setConfetti(true);
+      const timer = setTimeout(() => setConfetti(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [todos]);
 
   return (
     <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
