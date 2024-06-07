@@ -22,10 +22,18 @@ const Index = () => {
       return todo;
     });
     setTodos(updatedTodos);
+
+    // Check if all todos are completed
+    if (updatedTodos.every(todo => todo.completed)) {
+      setConfetti(true);
+      const timer = setTimeout(() => setConfetti(false), 3000);
+      return () => clearTimeout(timer);
+    }
   };
 
   useEffect(() => {
-    if (todos.some(todo => todo.completed)) {
+    // Trigger confetti effect only when all todos are completed
+    if (todos.length > 0 && todos.every(todo => todo.completed)) {
       setConfetti(true);
       const timer = setTimeout(() => setConfetti(false), 3000);
       return () => clearTimeout(timer);
